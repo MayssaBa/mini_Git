@@ -1,0 +1,5 @@
+this file is used to test les fcts: hashFile et pour blobfile aussi**
+mayssa
+islem
+mayssa
+islem
