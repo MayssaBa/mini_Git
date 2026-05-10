@@ -42,13 +42,12 @@ void main(){
 
     
     // list *l3=listdir(".");
-    // printf("afterrrr");
     // if (l3!= NULL)
     // {
     //     char *ch3= ltos(l3);
     //     printf("listdir reslt:\n %s\n",ch3);
     //     free(s);
-    // }else{printf("null!!!");}
+    // }else{printf("null!!!");} 
 
     // int exist=file_exists("nnnn");
     // printf("exist?: %d\n",exist);
@@ -80,12 +79,13 @@ void main(){
     printf("%s\n",chwf2);
 
     WorkTree* wt=initWorkTree();
-    if(wt){printf("WTree cree avec succee\n");}else{printf("erreur de wtree!!\n");}
+    if(wt){printf("WTree cree avec succee\n");}
+    else{printf("erreur de wtree!!\n");}
 
     //rq: il ne faut pas worktree null!!!!!!!!
-    int exist_WT=inWorkTree(wt,"f1.txt");
     if(wt->n==0){printf("workTree NULL\n");}
     else{
+        int exist_WT=inWorkTree(wt,"f1.txt");
         if(exist_WT==-1){
             printf("le file n'existe pas");
         }
@@ -95,6 +95,35 @@ void main(){
     int app=appendWorkTree(wt,"f1.txt","shshshsh1",222);
     if(app==1){printf("Ajout avec succee en Wtree\n");}
     else{printf("erreur d'ajout / exist deja ou Wtree pleine\n");}
+
+    int exist_WT1=inWorkTree(wt,"f1.txt");
+    printf("%d\n",exist_WT1);
+
+    int app2=appendWorkTree(wt,"f2.txt","54sedhed",111);
+    char* chwt=wtts(wt);
+    printf("%s",chwt);
+
+    WorkTree* wt2=stwt("f3.txt\t25f8rrfgr5dghf45\t777\nf4\t45fgfdjfvk54\t427");
+    if(wt2){printf("%s",wtts(wt2));}
+    else{printf("stwt nottt working!!");}
+
+    int Wtfile=wttf(wt2,"wttf.txt");
+    if(Wtfile==1){printf("File wt creer avec succée\n");}
+    else{printf("error in wttf!!!\n");}
+
+    WorkTree* fileWT=ftwt("wttf.txt");
+    if(fileWT){printf("%s",wtts(fileWT));}
+    else{printf("error in ftwt!!\n");}
+
+    char* hashBlobWt=blobWorkTree(wt2);
+    if(hashBlobWt){printf("le copie du wt est dans: %s \n",hashBlobWt);}
+    else{printf("error in blobworktree\n");}
+
+    int mod=getChmod(".");
+    printf("%d\n",mod);
+
+
+
 
     
 

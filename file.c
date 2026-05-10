@@ -69,12 +69,17 @@ list* listdir(char* root_dir){
 }
 
 int file_exists(char *file){
-    list* listFich=listdir(".");
-    if(searchList(listFich,file)){
-        return 1;
+    if(file==NULL){
+        return 0;
     }
+    list* listFich=listdir(".");
+    if(listFich==NULL){
+        return 0;
+    }
+    int res=searchList(listFich, file);
     free(listFich);
-    return 0;
+
+    return res;
 }
 
 void cp(char *to, char *from){
@@ -132,7 +137,7 @@ void blobFile(char* file){
     ;
     char* path=hashToPath(hash); //mesh yrajaa: xy/hedyujdkld...... =>besh nsajlou fih el copie
 
-    int len=strlen("mkdir -p ")+strlen(path)+1; //tehseb long taa cmd besh taamlelha malloc besh teteb fiha el commande w tnjm testaamel variable (path)****
+    int len=strlen("mkdir -p ")+strlen(path)+1; //tehseb long taa cmd besh taamlelha malloc besh tekteb fiha el commande w tnjm testaamel variable (path)****
     char *cmd=malloc(len);
     sprintf(cmd,"mkdir -p %.*s",2,path); //pour creer le folder xy/ => prendre les 2 premieres caracteres**
     system(cmd);
@@ -144,7 +149,7 @@ void blobFile(char* file){
     }
 
     cp(path,file);
-    printf("Snapshot créé successfully: %s\n",path);
+    printf("Snapshot file créé successfully: %s\n",path);
     free(path);
 }
 
