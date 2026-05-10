@@ -4,6 +4,7 @@
 #include "worktree.h"
 #include "file.h"
 #include <unistd.h>
+#include <sys/stat.h>
 
 WorkFile* createWorkFile(char* name){
     WorkFile* wf=(WorkFile*)malloc(sizeof(WorkFile));
@@ -228,7 +229,7 @@ int getChmod(const char *path){
 }
 void setMode(int mode, char* path){
     char buff [100];
-    sprintf(buff, ”chmod %d %s”, mode, path);
+    sprintf(buff, "chmod %d %s", mode, path);
     system(buff);
 }
 
