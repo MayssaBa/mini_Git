@@ -5,6 +5,8 @@
 #include "workfile.h"
 #include "worktree.h"
 
+#include <string.h>
+
 
 
 void main(){
@@ -138,11 +140,11 @@ void main(){
     if(dirhash)printf("hash de dir:%s\n",dirhash);
     else printf("save not wrking\n");
 
-    int wfdir=appendWorkTree(testwt,"dir",dirhash ,getChmod("/root/projet_C/testSavefct/dir"));
+    int wfdir=appendWorkTree(testwt,"dir",dirhash ,getChmod("testSavefct/dir"));
     // printf("testwt: %s",wtts(testwt));
     char* shwt=saveWorkTree(testwt,"testSavefct");
     if(shwt)printf("%s\n",shwt);
-    else printf("save not wrking\n");
+    else printf("save not wrking %s\n",shwt);
 
     
 

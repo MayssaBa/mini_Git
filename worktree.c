@@ -36,7 +36,7 @@ int appendWorkTree(WorkTree* wt, char* name, char* hash, int mode) {
     if(wt->n==SIZE){return 0;}
     
     wt->tab[wt->n].name=name;
-    wt->tab[wt->n].hash=hash;
+    wt->tab[wt->n].hash=strdup(hash);
     wt->tab[wt->n].mode=mode;
     wt->n++;
     return 1;
@@ -190,18 +190,19 @@ char *saveWorkTree(WorkTree *wt, char *path)
 
         char fullpath[1024];
         snprintf(fullpath, sizeof(fullpath),"%s/%s",path, wf->name);
-
-        if(listdir(fullpath)!=NULL){
-            list* lwt=listdir(fullpath);
+        list* lwt=listdir(fullpath);
+        if(lwt!=NULL){
             WorkTree* newWt=initWorkTree();
             Cell *c=*lwt;
             while(c!=NULL){
                 appendWorkTree(newWt,c->data,NULL,0);
                 c=c->next;
             }
+            free(lwt);
             char* hashWT=saveWorkTree(newWt,fullpath);
             wf->hash=hashWT;
             wf->mode=getChmod(fullpath);
+            
         }else{
             blobFile(fullpath);
             wf->hash=strdup(sha256file(fullpath));
