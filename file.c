@@ -133,9 +133,9 @@ void blobFile(char* file){
     //     return;
     // }
 
-    FILE *test = fopen(file, "r");
+    FILE *test=fopen(file, "r");
 
-    if(test == NULL){
+    if(test== NULL){
         printf("Le fichier %s n'existe pas\n", file);
         return;
     }

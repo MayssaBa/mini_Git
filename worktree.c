@@ -186,8 +186,11 @@ char *saveWorkTree(WorkTree *wt, char *path)
 
     for(int i=0;i<wt->n;i++){
         WorkFile* wf=&(wt->tab[i]);
+        // printf("Recherche fichier: %s/%s\n", path, wf->name);
+
         char fullpath[1024];
         snprintf(fullpath, sizeof(fullpath),"%s/%s",path, wf->name);
+
         if(listdir(fullpath)!=NULL){
             list* lwt=listdir(fullpath);
             WorkTree* newWt=initWorkTree();
@@ -200,8 +203,8 @@ char *saveWorkTree(WorkTree *wt, char *path)
             wf->hash=hashWT;
             wf->mode=getChmod(fullpath);
         }else{
-            blobFile(wf->name);
-            wf->hash=sha256file(wf->name);
+            blobFile(fullpath);
+            wf->hash=strdup(sha256file(fullpath));
             wf->mode=getChmod(fullpath);
         }
 
