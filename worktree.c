@@ -2,65 +2,14 @@
 #include <stdlib.h>
 #include <string.h>
 #include "worktree.h"
+#include "workfile.h"
 #include "file.h"
 #include <unistd.h>
 #include <sys/stat.h>
+#include <dirent.h>
+#include <libgen.h> 
 
-WorkFile* createWorkFile(char* name){
-    WorkFile* wf=(WorkFile*)malloc(sizeof(WorkFile));
-    wf->name=name;
-    wf->hash=NULL;
-    wf->mode=0;
-    return wf;
-}
-char* wfts(WorkFile* wf){
-    if (wf==NULL){return NULL;}
-    char tab[4];
-    sprintf(tab,"%d",wf->mode);//car mode est int!!
-    int lenHash;
 
-    if(wf->hash==NULL){
-        lenHash=4; //le cas ou NULL car srtlen ne marche pas avec NULL!!
-    }else{
-        lenHash=strlen(wf->hash);
-    }
-
-    int lng=strlen(wf->name)+lenHash+strlen(tab)+3+1;//3=> nbre de \t et 1=>\0
-    char *ch=malloc(lng);
-    ch[0]='\0'; //pour initialiser la chaine: tnjmsh taamel concat maa ch ferghaa!!
-
-    strcat(ch,wf->name);
-    strcat(ch,"\t");
-    if(wf->hash==NULL){
-        strcat(ch,"NULL");
-    }else{
-        strcat(ch,wf->hash);
-    }
-    
-    strcat(ch,"\t");
-    strcat(ch,tab);
-
-    return ch;
-
- }
-
-WorkFile* stwf(char* ch){
-    if(ch==NULL){return NULL;}
-    
-    char* cop=strdup(ch); // copie modifiable=>tnjmsh tmodifie ala ch toul=>ch read only!!
-    char* splt=strtok(cop,"\t");//mesh t9os (split) ch selon el sep=\t
-
-    WorkFile* wf=(WorkFile*)malloc(sizeof(WorkFile));
-
-    wf->name=strdup(splt);//fe kol mara taamel copie mel part eli t9asmt 5ater baad taamel free w houa pointeur el splt ythi3!!
-    splt=strtok(NULL,"\t");
-    wf->hash=strdup(splt);
-    splt=strtok(NULL,"\t");
-    wf->mode=strtol(splt,NULL,10); //t7awel mel string lel int(long)=>NULL=>yaani moush mesh ne5o win ye9ef a fin et 10=>base decimale
-
-    free(cop); 
-    return wf;
-}
 
 
 WorkTree* initWorkTree(){
@@ -155,7 +104,7 @@ int wttf(WorkTree *wt, char *file)
     return 1;
 }
 
-WorkTree *ftwt(char *file)
+WorkTree* ftwt(char *file)
 {
     FILE *f=fopen(file, "r");
     if (f==NULL)
@@ -178,10 +127,10 @@ WorkTree *ftwt(char *file)
 
 char* blobWorkTree(WorkTree* wt){
     if(wt==NULL){return NULL;}
-    static char fname[]="myfileXXXXXX";
-    int fd = mkstemp(fname);
+    static char fname[]="/tmp/myfileXXXXXX";
+    int fd=mkstemp(fname);
     // printf("%d file tmp!!!!! %s\n",fd,fname);
-    if (fd == -1)
+    if (fd==-1)
         return NULL;
     
     close(fd);
@@ -191,12 +140,14 @@ char* blobWorkTree(WorkTree* wt){
         return NULL;
     }
     char* hashtmp=sha256file(fname);
+    if(hashtmp==NULL)
+        return NULL;
     char* path=hashToPath(hashtmp);
-    if(path == NULL){
+    if(path==NULL){
         free(hashtmp);
         return NULL;
     }
-    char *patht = malloc(strlen(path) + 3);
+    char *patht=malloc(strlen(path) + 3);
     sprintf(patht, "%s.t", path);
     int len=strlen("mkdir -p ")+strlen(patht)+1; //tehseb long taa cmd besh taamlelha malloc besh tekteb fiha el commande w tnjm testaamel variable (path)****
     char *cmd=malloc(len);
@@ -204,10 +155,6 @@ char* blobWorkTree(WorkTree* wt){
     system(cmd);
     free(cmd);
 
-    FILE *f=fopen(patht,"w"); //pour creer le file taht el folder xy/
-    if(f) {
-        fclose(f);
-    }
     cp(patht,fname);
 
     remove(fname);
@@ -219,7 +166,7 @@ char* blobWorkTree(WorkTree* wt){
 
 int getChmod(const char *path){
     struct stat ret;
-    if (stat(path, &ret) == -1) {
+    if (stat(path, &ret)==-1) {
         return -1;
     }
     return
@@ -233,6 +180,32 @@ void setMode(int mode, char* path){
     system(buff);
 }
 
+char *saveWorkTree(WorkTree *wt, char *path)
+{
+    if(path==NULL || wt==NULL){return NULL;}
+
+    for(int i=0;i<wt->n;i++){
+        WorkFile* wf=&(wt->tab[i]);
+        if(listdir(path)){
+            list* lwt=listdir(path);
+            WorkTree* newWt=initWorkTree();
+            Cell *c=*lwt;
+            while(c!=NULL){
+                appendWorkTree(newWt,c->data,NULL,0);
+                c=c->next;
+            }
+            char* hashWT=saveWorkTree(newWt,path);
+            wf->hash=hashWT;
+            wf->mode=getChmod(path);
+        }else{
+            blobFile(wf->name);
+            wf->hash=sha256file(wf->name);
+            wf->mode=getChmod(path);
+        }
+
+    }
+    return blobWorkTree(wt);
+}
 
 
 

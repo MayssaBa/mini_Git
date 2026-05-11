@@ -83,16 +83,20 @@ int file_exists(char *file){
 }
 
 void cp(char *to, char *from){
-    if (!file_exists(from)) {
-        printf("Le fichier source n'existe pas\n");
+    // if (!file_exists(from)) {
+    //     printf("Le fichier source n'existe pas\n");
+    //     return;
+    // }
+    FILE* f=fopen(from,"r");
+    if(f==NULL){
+        printf("Source file %s not found\n", from);
         return;
     }
-    FILE* f=fopen(from,"r"); //rq: r ==>read => pour lire le fich src
-    FILE* fto=fopen(to,"w"); //rq: w ==>write => pour ecrire dans le fich dest
-    
-    if(f==NULL || fto==NULL) {
-            printf("Erreur lors de l'ouverture des fichiers.\n");
-            return;
+    FILE* fto=fopen(to,"w");
+    if(fto==NULL){
+        printf("Can not open dest %s\n", to);
+        fclose(f);
+        return;
     }
     char buffer[1024]; // besh t7ot bel ligne bel ligne
     while(fgets(buffer,sizeof(buffer),f)!=NULL) { // fgets: ta9ra from bel ligne w t7ot fel buffer
@@ -124,8 +128,15 @@ char *hashToPath(char *hash)
 
 
 void blobFile(char* file){
-    if(file_exists(file)==0){
-        printf("Le fichier %s n'existe pas pour creer un instantané!!\n",file);
+    // if(file_exists(file)==0){
+    //     printf("Le fichier %s n'existe pas pour creer un instantané!!\n",file);
+    //     return;
+    // }
+
+    FILE *test = fopen(file, "r");
+
+    if(test == NULL){
+        printf("Le fichier %s n'existe pas\n", file);
         return;
     }
 

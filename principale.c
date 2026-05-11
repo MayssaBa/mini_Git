@@ -2,7 +2,9 @@
 #include <stdlib.h>
 #include "liste.h"
 #include "file.h"
+#include "workfile.h"
 #include "worktree.h"
+
 
 
 void main(){
@@ -115,15 +117,32 @@ void main(){
     if(fileWT){printf("%s",wtts(fileWT));}
     else{printf("error in ftwt!!\n");}
 
-    char* hashBlobWt=blobWorkTree(wt2);
-    if(hashBlobWt){printf("le copie du wt est dans: %s \n",hashBlobWt);}
-    else{printf("error in blobworktree\n");}
+    // char* hashBlobWt=blobWorkTree(wt2);
+    // if(hashBlobWt){printf("le copie du wt est dans: %s \n",hashBlobWt);}
+    // else{printf("error in blobworktree\n");}
 
-    int mod=getChmod(".");
-    printf("%d\n",mod);
+    // int mod=getChmod(".");
+    // printf("%d\n",mod);
 
 
+    WorkTree* testwt=initWorkTree();
+    int wf1=appendWorkTree(testwt,"f1.txt", sha256file("/root/projet_C/testSavefct/f1.txt"),getChmod("/root/projet_C/testSavefct/f1.txt"));
+    int wf_2=appendWorkTree(testwt,"f2.txt", sha256file("/root/projet_C/testSavefct/f2.txt"),getChmod("/root/projet_C/testSavefct/f2.txt"));
+    
 
+    WorkTree* dirwt=initWorkTree();
+    int wf3=appendWorkTree(dirwt,"f3.txt", sha256file("/root/projet_C/testSavefct/dir/f3.txt"),getChmod("/root/projet_C/testSavefct/dir/f3.txt"));
+    
+
+    char* dirhash=saveWorkTree(dirwt,"testSavefct/dir");
+    if(dirhash)printf("hash de dir:%s\n",dirhash);
+    else printf("save not wrking\n");
+
+    int wfdir=appendWorkTree(testwt,"dir",dirhash ,getChmod("/root/projet_C/testSavefct/dir"));
+
+    char* shwt=saveWorkTree(testwt,"testSavefct");
+    if(shwt)printf("%s\n",shwt);
+    else printf("save not wrking\n");
 
     
 

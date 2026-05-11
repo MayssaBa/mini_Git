@@ -1,15 +1,12 @@
 #ifndef WORKTREE_H
 #define WORKTREE_H
 
+#include "workfile.h"
+
 #define SIZE 30
 
 
 
-typedef struct {
-    char* name;
-    char* hash;
-    int mode;
-}WorkFile;
 
 typedef struct {
     WorkFile* tab;
