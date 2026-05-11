@@ -138,11 +138,11 @@ void main(){
     if(dirhash)printf("hash de dir:%s\n",dirhash);
     else printf("save not wrking\n");
 
-    int wfdir=appendWorkTree(testwt,"dir",dirhash ,getChmod("/root/projet_C/testSavefct/dir"));
+    // int wfdir=appendWorkTree(testwt,"dir",dirhash ,getChmod("/root/projet_C/testSavefct/dir"));
 
-    char* shwt=saveWorkTree(testwt,"testSavefct");
-    if(shwt)printf("%s\n",shwt);
-    else printf("save not wrking\n");
+    // char* shwt=saveWorkTree(testwt,"testSavefct");
+    // if(shwt)printf("%s\n",shwt);
+    // else printf("save not wrking\n");
 
     
 
