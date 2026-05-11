@@ -127,33 +127,54 @@ void main(){
     // printf("%d\n",mod);
 
 
-    WorkTree* testwt=initWorkTree();
-    int wf1=appendWorkTree(testwt,"f1.txt", sha256file("testSavefct/f1.txt"),getChmod("testSavefct/f1.txt"));
-    int wf_2=appendWorkTree(testwt,"f2.txt", sha256file("testSavefct/f2.txt"),getChmod("testSavefct/f2.txt"));
+    // WorkTree* testwt=initWorkTree();
+    // int wf1=appendWorkTree(testwt,"f1.txt", sha256file("testSavefct/f1.txt"),getChmod("testSavefct/f1.txt"));
+    // int wf_2=appendWorkTree(testwt,"f2.txt", sha256file("testSavefct/f2.txt"),getChmod("testSavefct/f2.txt"));
     
 
-    WorkTree* dirwt=initWorkTree();
-    int wf3=appendWorkTree(dirwt,"f3.txt", sha256file("testSavefct/dir/f3.txt"),getChmod("testSavefct/dir/f3.txt"));
+    // WorkTree* dirwt=initWorkTree();
+    // int wf3=appendWorkTree(dirwt,"f3.txt", sha256file("testSavefct/dir/f3.txt"),getChmod("testSavefct/dir/f3.txt"));
     // printf("dirwt: %s",wtts(dirwt));
 
-    char* dirhash=saveWorkTree(dirwt,"testSavefct/dir");
-    if(dirhash)printf("hash de dir:%s\n",dirhash);
-    else printf("save not wrking\n");
+    // char* dirhash=saveWorkTree(dirwt,"testSavefct/dir");
+    // if(dirhash)printf("hash de dir:%s\n",dirhash);
+    // else printf("save not wrking\n");
 
-    int wfdir=appendWorkTree(testwt,"dir",dirhash ,getChmod("testSavefct/dir"));
+    // int wfdir=appendWorkTree(testwt,"dir",dirhash ,getChmod("testSavefct/dir"));
     // printf("testwt: %s",wtts(testwt));
-    char* shwt=saveWorkTree(testwt,"testSavefct");
-    if(shwt)printf("%s\n",shwt);
-    else printf("save not wrking %s\n",shwt);
-
-    
+    // char* shwt=saveWorkTree(testwt,"testSavefct");
+    // if(shwt)printf("%s\n",shwt);
+    // else printf("save not wrking %s\n",shwt);
 
 
+    WorkTree *wtrest=initWorkTree();
+
+    appendWorkTree(wtrest, "fr1.txt", sha256file("restore_test/fr1.txt"), getChmod("restore_test/fr1.txt"));
+    appendWorkTree(wtrest, "fr2.txt", sha256file("restore_test/fr2.txt"), getChmod("restore_test/fr2.txt"));
+
+    // WorkTree *dirwt=initWorkTree();
+    // appendWorkTree(dirwt, "f3.txt", sha256file("restore_test/dir/f3.txt"), getChmod("restore_test/dir/f3.txt"));
+
+    // char *dirhash=saveWorkTree(dirwt, "restore_test/dir");
+    // appendWorkTree(wtrest, "dir", dirhash, getChmod("restore_test/dir"));
+
+    // char *rootHash=saveWorkTree(wtrest,"restore_test");
+
+    // printf("SAVE OK: %s\n", rootHash);
+
+    char* rootHash="5a1256c7c29211755120ba7379fe59437a7fef57580009a3090502b1c7722574";
+    WorkTree *loaded=ftwt(hashToPath(rootHash));
+    restoreWorkTree(loaded, "restore_output");
+
+
+        
 
 
 
 
-    
+
+
+        
 
 
 

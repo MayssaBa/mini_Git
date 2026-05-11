@@ -216,6 +216,47 @@ char *saveWorkTree(WorkTree *wt, char *path)
 
 
 
+void restoreWorkTree(WorkTree *wt, char *path)
+{
+    if (wt==NULL || path==NULL)
+        return;
+    for (int i=0;i<wt->n;i++)
+    {
+        WorkFile *wf=&(wt->tab[i]);
+        char *hashPath=hashToPath(wf->hash);
+        char dest[500];
+        sprintf(dest, "%s/%s", path, wf->name);
 
+        char patht[500];
+        sprintf(patht, "%s.t", hashPath);
+
+        struct stat st;
+        if (stat(patht, &st) == 0 && S_ISDIR(st.st_mode))
+        {
+            char cmd[500];
+            sprintf(cmd, "mkdir -p %s", dest);
+            system(cmd);
+
+            WorkTree *newwt = ftwt(patht);
+            if (newwt != NULL)
+            {
+                restoreWorkTree(newwt, dest);
+            }
+        }
+        else
+        {   
+            char cmd[500];
+            sprintf(cmd, "mkdir -p %s", path);
+            system(cmd);
+            FILE *test = fopen(hashPath, "r");
+            if (test == NULL) return;
+            fclose(test);
+            cp(dest, hashPath);
+            setMode(wf->mode, dest);
+        }
+
+        free(hashPath);
+    }
+}
 
 

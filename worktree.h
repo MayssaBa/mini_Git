@@ -28,6 +28,7 @@ char* blobWorkTree(WorkTree* wt);
 int getChmod(const char *path);
 void setMode(int mode, char* path);
 char* saveWorkTree(WorkTree* wt, char* path);
+void restoreWorkTree(WorkTree *wt, char *path);
 
 
 
